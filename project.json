@@ -15,6 +15,8 @@
         "src/resource.js",
         "src/MenuScene.js",
         "src/Sound.js",
-        "src/SoundButton.js"
+        "src/SoundButton.js",
+        "src/AboutScene.js",
+        "src/GameScene.js"
     ]
 }

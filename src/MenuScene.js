@@ -5,7 +5,7 @@ var MenuScene = cc.Scene.extend({
     _hero:null,
     _playBtn:null,
     _aboutBtn:null,
-
+    _scoreText:null,
     ctor:function() {
         this._super();
         var layer = new cc.Layer();
@@ -58,14 +58,24 @@ var MenuScene = cc.Scene.extend({
         layer.addChild(menu);
         menu.x = menu.y = 0;
         this.scheduleUpdate();
+
+        // var fnt = "res/myFont.fnt";
+        // var scoreLabel = new cc.LabelBMFont("S C O R E",fnt);
+        // this.addChild(scoreLabel);
+        // scoreLabel.x=915;
+        // scoreLabel.y=winSize.height-25;
+        // this._scoreText = new cc.LabelBMFont("0",fnt);
+        // this.addChild(this._scoreText);
+        // this._scoreText.x=915;
+        // this._scoreText.y=winSize.height-60;
     },
     _play:function(){
-        Sound.stop();
         Sound.playGameBgMusic();
         //cc.director.runScene(new GameScene);
     },
     _about:function(){
-
+        Sound.playEatMoney();
+        cc.director.runScene(new AboutScene());
     },
     update:function(){
         cc.log("update");

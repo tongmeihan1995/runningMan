@@ -4,9 +4,14 @@
 var Sound = {
     silence:false,
     _eatEffect:0,
+    _menuBgMusic:false,
     playMenuBgMusic:function(){
         if(!Sound.silence){
-            cc.audioEngine.playMusic("res/bgMusic.mp3",true);
+            if(!Sound._menuBgMusic){
+                cc.audioEngine.playMusic("res/bgMusic.mp3",true);
+                Sound._menuBgMusic=true;
+            }
+
         }
     },
     playGameBgMusic:function(){
@@ -18,28 +23,28 @@ var Sound = {
         if(!Sound.silence){
             if(Sounc._eatEffect) {
                 cc.audioEngine.stopEffect(Sound._eatEffect);
-                Sound._eatEffect = cc.audioEngine.playMusic("res/eat1.mp3", false);
+                Sound._eatEffect = cc.audioEngine.playEffect("res/eat1.mp3", false);
             }
         }
     },
     playEatMoney:function(){
         if(!Sound.silence){
-            cc.audioEngine.playMusic("res/eat2.mp3",false);
+            cc.audioEngine.playEffect("res/eat2.mp3",false);
         }
     },
     playEatHat:function(){
         if(!Sound.silence){
-            cc.audioEngine.playMusic("res/eat3.mp3",false);
+            cc.audioEngine.playEffect("res/eat3.mp3",false);
         }
     },
     playHit:function(){
         if(!Sound.silence){
-            cc.audioEngine.playMusic("res/hit.mp3",true);
+            cc.audioEngine.playEffect("res/hit.mp3",true);
         }
     },
     playHurt:function(){
         if(!Sound.silence){
-            cc.audioEngine.playMusic("res/hit.mp3",true);
+            cc.audioEngine.playEffect("res/hit.mp3",true);
         }
     },
     playLose:function(){
@@ -50,6 +55,7 @@ var Sound = {
     stop:function(){
         cc.audioEngine.stopAllEffects();
         cc.audioEngine.stopMusic();
+        Sound._menuBgMusic=false;
     },
     toggleOnOff:function(){
         if(Sound.silence){
