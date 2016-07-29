@@ -27,7 +27,6 @@ var GameBackground = cc.Layer.extend({
         this._bg = bbbb("#bg2.jpg");
         this.addChild(this._bg);
 
-
         /*this._bg.x=winSize.width/2;
         this._bg.y=winSize.height/2;
         this._bg.setScaleX(winSize.width/this._bg.width);

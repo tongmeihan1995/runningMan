@@ -24,10 +24,12 @@ var Girl = cc.Sprite.extend({
         this._fast=fast;
         this.stopAllActions();
         if(!fast){
-            this._animation.setDelayPerUnit(20);
+            //this._animation.setDelayPerUnit(20);
+            cc.log("lower");
         }
         else{
-            this._animation.setDelayPerUnit(60);
+            //this._animation.setDelayPerUnit(60);
+            cc.log("fast");
         }
         var action = cc.animate(this._animation).repeatForever();
         this.runAction(action);

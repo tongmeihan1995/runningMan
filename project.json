@@ -23,6 +23,8 @@
         "src/GameOverUI.js",
         "src/GameSceneUI.js",
         "src/Girl.js",
-        "src/GameConstants.js"
+        "src/GameConstants.js",
+        "src/FoodManager.js",
+        "src/Item.js"
     ]
 }

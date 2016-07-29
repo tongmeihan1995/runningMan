@@ -8,6 +8,7 @@ var GameScene = cc.Layer.extend({
     itemBatchLayer:null,
     _touchY:0,
     //_touchX:0,
+    _foodManager:null,
 
     ctor:function(){
         this._super();
@@ -20,12 +21,18 @@ var GameScene = cc.Layer.extend({
         this._girl = new Girl();
         this.addChild(this._girl,1);
 
-        this.itemBatchLayer = new cc.SpriteBatchNode("res/texture.jpg");
+        //this.itemBatchLayer = new cc.SpriteBatchNode("res/texture.jpg");
+        this.itemBatchLayer = new cc.Layer();
         this.addChild(this.itemBatchLayer,2);
+
+        //var sprite = new cc.Sprite("#start1.jpg");
+        //this.itemBatchLayer.addChild(sprite);
 
         this._ui = new GameSceneUI();
         this.addChild(this._ui);
         this._ui.update();
+
+        this._foodManager = new FoodManager(this);
 
         this.init();
 
@@ -33,6 +40,7 @@ var GameScene = cc.Layer.extend({
     },
 
     init:function(){
+        this._foodManager.init();
         this.scheduleUpdate();
         Sound.playGameBgMusic();
         Game.user.lives = GameConstants.HERO_LIVES;
@@ -64,11 +72,10 @@ var GameScene = cc.Layer.extend({
     },
 
     update:function(elapsed){
-        this._girl.y -= (this._girl.y-this._touchY)*0.1;
+        //this._girl.y -= (this._girl.y-this._touchY)*0.1;
         //this._girl.x -= (this._girl.x-this._touchX)*0.1;
-        this._handleHeroPose();
-        //cc.log(this._touchX);
-        //cc.log(this._girl.x);
+        this._foodManager.update(this._girl,elapsed);
+
         var winSize = cc.director.getWinSize();
         switch(Game.gameState){
             case GameConstants.GAME_STATE_IDLE:
@@ -81,7 +88,49 @@ var GameScene = cc.Layer.extend({
                     this._girl.state = GameConstants.HERO_STATE_FLYING;
                 }
                 this._ui.update();
+                this._handleHeroPose();
                 break;
+            case GameConstants.GAME_STATE_FLYING:
+                if(Game.user.Money>0){//加速
+                    Game.user.heroSpeed +=(GameConstants.HERO_MAX_SPEED-Game.user.heroSpeed)*0.2;//这里可以控制快速加速
+                    Game.user.Money -= elapsed;
+                }
+                if(Game.user.hitObstacle<=0){
+                    this._girl.state = GameConstants.HERO_STATE_FLYING;
+                    this._girl.y -= (this._girl.y-this._touchY)*0.1;//这里控制小仙女跟随鼠标上下移动
+                    this._handleHeroPose();//这里控制小仙女朝向根据鼠标的位置改变
+                    //这里控制小仙女进入加速动画
+                    if(Game.user.heroSpeed>GameConstants.HERO_MIN_SPEED+100){
+                        this._girl.toggleSpeed(true);
+                    }
+                    else{
+                        this._girl.toggleSpeed(false);
+                    }
+                }
+                else{//如果撞击的话
+                    if(Game.user.Money<=0){//如果没有进入急速状态,这种状态下是不用管障碍物的
+                        if(this._girl.state!=GameConstants.HERO_STATE_HIT){
+                            this._girl.state=GameConstants.HERO_STATE_HIT;
+                        }
+                        this._girl.y -= (this._girl.y-winSize.width/2)*0.1;
+                        if(this._girl.y>winSize.width/2){
+                            this._girl.rotation -= Game.user.hitObstacle*1;//这里可以控制转的越来越慢
+                        }
+                        else{
+                            this._girl.rotation += Game.user.hitObstacle*1;
+                        }
+                    }
+                    Game.user.hitObstacle--;
+                }
+
+                if(Game.user.lovely>0){
+                    Game.user.lovely -= elapsed;
+                }
+                Game.user.heroSpeed -=(Game.user.heroSpeed-GameConstants.HERO_MIN_SPEED)*0.01;//就是同一速度回慢慢回到最小速度
+                this._background.speed = Game.user.heroSpeed*elapsed;
+                Game.user.distance += (Game.user.heroSpeed*elapsed)*0.1;
+                this._ui.update();
+
         }
     },
 
