@@ -3,7 +3,8 @@
  */
 var Game = {
     user:{
-        lives:GameConstants.HERO_LIVES,
+       // lives:GameConstants.HERO_LIVES,
+        lives:0,
         score:0,
         distance:0,
         heroSpeed:0,

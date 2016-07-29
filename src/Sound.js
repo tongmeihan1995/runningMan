@@ -21,7 +21,7 @@ var Sound = {
     },
     playMEat:function(){
         if(!Sound.silence){
-            if(Sounc._eatEffect) {
+            if(Sound._eatEffect) {
                 cc.audioEngine.stopEffect(Sound._eatEffect);
                 Sound._eatEffect = cc.audioEngine.playEffect("res/eat1.mp3", false);
             }

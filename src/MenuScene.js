@@ -70,19 +70,18 @@ var MenuScene = cc.Scene.extend({
         // this._scoreText.y=winSize.height-60;
     },
     _play:function(){
-        Sound.playGameBgMusic();
-        //cc.director.runScene(new GameScene);
+        Sound.playMEat();
+        cc.director.runScene(new GameScene());
     },
     _about:function(){
         Sound.playEatMoney();
         cc.director.runScene(new AboutScene());
     },
     update:function(){
-        cc.log("update");
+        /*这里是让整体上下浮动的动画*/
         var currentDate = new Date();
         this._hero.y=400 +(Math.cos(currentDate.getTime()*0.002))*25;
         this._playBtn.y=350 +(Math.cos(currentDate.getTime()*0.002))*10;
         this._aboutBtn.y=250+(Math.cos(currentDate.getTime()*0.002))*10;
     }
-
 });

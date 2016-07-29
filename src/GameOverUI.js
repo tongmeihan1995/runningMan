@@ -29,7 +29,9 @@ var GameOverUI = cc.Layer.extend({
         this._scoreText.x=winSize.width/2;
         this._scoreText.y=winSize.height-270;
 
-        var replayBtn = new cc.MenuItemImage()
+        var replayBtn = new cc.MenuItemImage("res/reply.jpg","res/reply.jpg",this._replay());
+        var aboutBtn = new cc.MenuItemImage("res/about.jpg","res/about.jpg",this._about());
+        var returnBtn = new cc.MenuItemImage("#welcome.jpg","#welcome.jpg",this._return());
 
     },
     init:function(){

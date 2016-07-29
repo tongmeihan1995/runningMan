@@ -7,7 +7,7 @@ var AboutScene = cc.Scene.extend({
         var layer = new cc.Layer;
         this.addChild(layer);
         var winSize = cc.director.getWinSize();
-        var bgAbout = new cc.Sprite('#bg2.jpg');
+        var bgAbout = new cc.Sprite('#bg3.jpg');
         bgAbout.x=winSize.width/2;
         bgAbout.y=winSize.height/2;
         bgAbout.setScaleX(winSize.width/bgAbout.width);
@@ -32,12 +32,10 @@ var AboutScene = cc.Scene.extend({
         var menu =new cc.Menu(backButton);
         menu.x=menu.y=0;
         layer.addChild(menu);
-        //Sound.playMenuBgMusic();
         return true;
     },
     _back:function(){
         Sound.playEatMoney();
-        //Sound.stop();
         cc.director.runScene(new MenuScene());
     }
-})
+});

@@ -17,6 +17,12 @@
         "src/Sound.js",
         "src/SoundButton.js",
         "src/AboutScene.js",
-        "src/GameScene.js"
+        "src/GameScene.js",
+        "src/Game.js",
+        "src/GameBackgound.js",
+        "src/GameOverUI.js",
+        "src/GameSceneUI.js",
+        "src/Girl.js",
+        "src/GameConstants.js"
     ]
 }
