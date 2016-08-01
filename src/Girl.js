@@ -3,7 +3,7 @@
  */
 var Girl = cc.Sprite.extend({
     _animation:null,
-    _fast:0,
+    _fast:false,
     state:0,
     ctor:function(){
         this._super("#girl.jpg");
@@ -31,8 +31,8 @@ var Girl = cc.Sprite.extend({
             //this._animation.setDelayPerUnit(60);
             cc.log("fast");
         }
-        var action = cc.animate(this._animation).repeatForever();
-        this.runAction(action);
+        //var action = cc.animate(this._animation).repeatForever();
+        //this.runAction(action);
     }
 
 });

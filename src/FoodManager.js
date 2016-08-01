@@ -12,7 +12,7 @@ var FoodManager = cc.Class.extend({
     _patternGap:0,//每个食物水平距离
     _patternGapCount:0,//水平距离计数
     _patternChangeDistance:0,//当前食物组的水平跨度
-    _patternLength:0,//垂直状态下的食物状态
+    _patternLength:0,//垂直状态下的食物组的长度
     _patternOnce:true,//垂直状态下逻辑控制
     _patternPosYstart:0,//垂直装填下的食物y起始坐标
 
@@ -26,10 +26,10 @@ var FoodManager = cc.Class.extend({
         this._patternPosY = cc.director.getWinSize().height - GameConstants.GAME_AREA_TOP_BOTTOM;
         this._patternStep = 15;
         this._patternDirection = 1;
-        this._patternGap = 20;
+        this._patternGap = 80;
         this._patternGapCount = 0;
         this._patternChangeDistance = 0;
-        this._patternLength = 50;
+        this._patternLength = 500;
         this._patternOnce = true;
     },
     init:function(){
@@ -56,18 +56,26 @@ var FoodManager = cc.Class.extend({
             this._patternChangeDistance -= Game.user.heroSpeed*elapsed;
         }
         else{
-            //this._pattern = Math.ceil(Math.random()*4);
-            this._pattern = 1;
+            if(Math.random()<0.1){
+                this._pattern = Math.ceil(Math.random()*4);
+            }
+            else{//这种情况下出现钱老爷和萌萌哒小圣诞老爷
+                //cc.log("especial");
+                this._pattern = Math.ceil(Math.random()*2+4);
+            }
+            //this._pattern = 2;
             if(this._pattern == 1){
                 this._patternChangeDistance = Math.random()*500+500;
             }
             else if(this._pattern == 2){
                 this._patternOnce = true;
-                this._patternStep = 40;
+                this._patternStep = 100;
+                //this._patternChangeDistance = Math.random()*5000+5000;
                 this._patternChangeDistance = this._patternGap * Math.random()*3+5;
             }
             else if(this._pattern == 3){
-                this._patternStep = Math.round(Math.random()*2+2)*10;//这样求出来的数值应该是2,3,4
+                //this._patternStep = Math.round(Math.random()*2+4)*10;//这样求出来的数值应该是40,50,60
+                this._patternStep = 40;
                 if(Math.random()>0.5){
                     this._patternDirection *= -1;
                 }
@@ -82,8 +90,9 @@ var FoodManager = cc.Class.extend({
         }
     },
     _createFoodPattern:function(elapsed){
+        //cc.log(this._patternGapCount);
         if(this._patternGapCount<this._patternGap){
-            this._patternGapCount += Game.user.speed * elapsed;
+            this._patternGapCount += Game.user.heroSpeed* elapsed;
         }
         else if(this._pattern!=0){
             this._patternGapCount=0;
@@ -91,21 +100,92 @@ var FoodManager = cc.Class.extend({
             var item = null;
             switch(this._pattern){
                 case 1:
-                    if(Math.random()>90){//有10%的概率改变纵坐标
-                        this._patternPosY=Math.floor(Math.random()*(winSize-2*GameConstants.GAME_AREA_TOP_BOTTOM)+GameConstants.GAME_AREA_TOP_BOTTOM);
+                    cc.log("add horizontal item");
+                    if(Math.random()>0.9){//有10%的概率改变纵坐标
+                        this._patternPosY=Math.floor(Math.random()*(winSize.height-2*GameConstants.GAME_AREA_TOP_BOTTOM)+GameConstants.GAME_AREA_TOP_BOTTOM);
                     }
                     item = Item.create(Math.ceil(Math.random()*4));
-                    item.x = winSize.width+item.width;
+                    item.x = winSize.width+item.width*GameConstants.ITEM_SCALE;
                     item.y = this._patternPosY;
-
                     this._itemToAnimate.push(item);
                     this._container.addChild(item,1);
                     break;
                 case 2:
+                    cc.log("add vertical item");
+                    if(this._patternOnce==true){
+                        this._patternOnce=false;
+                        this._patternPosY=Math.floor(Math.random()*(winSize.height-2*GameConstants.GAME_AREA_TOP_BOTTOM)+GameConstants.GAME_AREA_TOP_BOTTOM);
+                        this._patternLength=(Math.random()*0.4+0.4)*winSize.height;
+                    }
+                    this._patternPosYstart=this._patternPosY;
+                    while(this._patternPosYstart+this._patternStep<this._patternPosY+this._patternLength
+                        &&this._patternPosYstart+this._patternStep<winSize.height*0.8){
+                        item = Item.create(Math.ceil(Math.random()*4));
+                        item.x = winSize.width+item.width*GameConstants.ITEM_SCALE;
+                        item.y = this._patternPosYstart;
+                        //cc.log("patternPosYstart"+this._patternPosYstart);
+                        this._itemToAnimate.push(item);
+                        this._container.addChild(item,1);
+                        this._patternPosYstart+=this._patternStep;
+                    }
                     break;
                 case 3:
+                    cc.log("add zigzag item");
+                    if(this._patternPosY<=winSize.height-GameConstants.GAME_AREA_TOP_BOTTOM && this._patternPosY >= GameConstants.GAME_AREA_TOP_BOTTOM){
+                        item = Item.create(Math.ceil(Math.random()*4));
+                        item.x = winSize.width+item.width*GameConstants.ITEM_SCALE;
+                        item.y = this._patternPosY;
+                        this._itemToAnimate.push(item);
+                        this._container.addChild(item,1);
+                        this._patternPosY += this._patternStep*this._patternDirection;
+                    }
+                    else{
+                        if(this._patternDirection == -1 ){
+                            this._patternDirection = 1;
+                            this._patternPosY=GameConstants.GAME_AREA_TOP_BOTTOM+this._patternStep;
+                        }
+                        else if(this._patternDirection == 1 ){
+                            this._patternDirection = -1;
+                            this._patternPosY=winSize.height-GameConstants.GAME_AREA_TOP_BOTTOM-this._patternStep;
+                        }
+                        item = Item.create(Math.ceil(Math.random()*4));
+                        item.x = winSize.width+item.width*GameConstants.ITEM_SCALE;
+                        item.y = this._patternPosY;
+                        this._itemToAnimate.push(item);
+                        this._container.addChild(item,1);
+                        this._patternPosY += this._patternStep*this._patternDirection;
+                        //this._patternPosY = winSize.height - GameConstants.GAME_AREA_TOP_BOTTOM;
+                    }
+
                     break;
                 case 4:
+                    cc.log("add random item");
+                    if(Math.random()>0.5){
+                        this._patternPosY=Math.floor(Math.random()*(winSize.height-2*GameConstants.GAME_AREA_TOP_BOTTOM)+GameConstants.GAME_AREA_TOP_BOTTOM);
+                    }
+                    item = Item.create(Math.ceil(Math.random()*4));
+                    item.x = winSize.width+item.width*GameConstants.ITEM_SCALE;
+                    item.y = this._patternPosY;
+                    this._itemToAnimate.push(item);
+                    this._container.addChild(item,1);
+                    break;
+                case 5:
+                    cc.log("Money appear");
+                    this._patternPosY=Math.floor(Math.random()*(winSize.height-2*GameConstants.GAME_AREA_TOP_BOTTOM)+GameConstants.GAME_AREA_TOP_BOTTOM);
+                    item = Item.create(GameConstants.MONEY_TYPE);
+                    item.x = winSize.width+item.width*GameConstants.ITEM_SCALE;
+                    item.y = this._patternPosY;
+                    this._itemToAnimate.push(item);
+                    this._container.addChild(item,2);
+                    break;
+                case 6:
+                    cc.log("Lovely appear");
+                    this._patternPosY=Math.floor(Math.random()*(winSize.height-2*GameConstants.GAME_AREA_TOP_BOTTOM)+GameConstants.GAME_AREA_TOP_BOTTOM);
+                    item = Item.create(GameConstants.LOVELY_TYPE);
+                    item.x = winSize.width+item.width*GameConstants.ITEM_SCALE;
+                    item.y = this._patternPosY;
+                    this._itemToAnimate.push(item);
+                    this._container.addChild(item,2);
                     break;
                 default:
                     break;
@@ -118,9 +198,15 @@ var FoodManager = cc.Class.extend({
         for(var i=this._itemToAnimate.length-1;i>=0;i--){
             item = this._itemToAnimate[i];
             if(item){
-                if(Game.user.lovely>0&&item.type<GameConstants.NORMAL_STAR_NUMBER){//这里是星星向仙女移动,但是有特殊效果的星星除外
-                    item.x -= (item.x-hero.x)*0.2;
-                    item.y -= (item.y-hero.y)*0.2;
+                if(Game.user.lovely>0&&item.type<=GameConstants.NORMAL_STAR_NUMBER){//这里是星星向仙女移动,但是有特殊效果的星星除外
+                    if(this._gameScene._girl._fast==true){
+                        item.x -= (item.x-hero.x)*0.08;
+                        item.y -= (item.y-hero.y)*0.08;
+                    }
+                    else{
+                        item.x -= (item.x-hero.x)*0.06;
+                        item.y -= (item.y-hero.y)*0.06;
+                    }
                 }
                 else{//这是星星正常向左移动
                     item.x -= Game.user.heroSpeed*elapsed;
@@ -129,14 +215,13 @@ var FoodManager = cc.Class.extend({
                     this._itemToAnimate.splice(i,1);
                     cc.pool.putInPool(item);
                     this._container.removeChild(item);
-                    //continue;
                 }
                 else{
                     var heroItem_xDist = item.x-hero.x;
                     var heroItem_yDist = item.y-hero.y;
                     var heroItem_squerDist = heroItem_xDist*heroItem_xDist+heroItem_yDist*heroItem_yDist;
-                    if(heroItem_squerDist<5000){//发生了碰撞
-                        if(item.type<GameConstants.NORMAL_STAR_NUMBER){
+                    if(heroItem_squerDist<8000){//发生了碰撞
+                        if(item.type<=GameConstants.NORMAL_STAR_NUMBER){
                             Game.user.score += item.type;
                             Sound.playEatHat();
                         }
@@ -146,7 +231,7 @@ var FoodManager = cc.Class.extend({
                             Sound.playEatMoney();
                         }
                         else if(item.type==GameConstants.LOVELY_TYPE){
-                            Game.user.lovely = 4;
+                            Game.user.lovely = 0.5;
                             Game.user.score += 1;
                             Sound.playMEat();
                         }

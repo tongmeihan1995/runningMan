@@ -79,8 +79,8 @@ var GameScene = cc.Layer.extend({
         var winSize = cc.director.getWinSize();
         switch(Game.gameState){
             case GameConstants.GAME_STATE_IDLE:
-                if(this._girl.x<winSize.width/4){
-                    this._girl.x+=((winSize.width/4+10)-this._girl.x)*0.05;
+                if(this._girl.x<winSize.width/2.5){
+                    this._girl.x+=((winSize.width/2.5+10)-this._girl.x)*0.05;
                     Game.user.heroSpeed+=(GameConstants.HERO_MIN_SPEED-Game.user.heroSpeed)*0.05;
                     this._background.speed = Game.user.heroSpeed * elapsed;
                 }else{

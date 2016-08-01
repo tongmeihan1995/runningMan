@@ -23,7 +23,7 @@ var MenuScene = cc.Scene.extend({
         layer.addChild(title);
 
         this._hero = new cc.Sprite('#girl.jpg');
-        var change = 0.2
+        var change = 0.2;
         this._hero.setScaleX(change);
         this._hero.setScaleY(change);
         this._hero.x = -this._hero.width / 2*change;

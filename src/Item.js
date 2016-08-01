@@ -4,24 +4,29 @@
 var Item = cc.Sprite.extend({
     type:0,
     ctor:function(type){
-        this._super("#star"+type +".jpg");
+        this._super("#start"+type +".jpg");
+        this.setScaleX(GameConstants.ITEM_SCALE);
+        this.setScaleY(GameConstants.ITEM_SCALE);
         this.type = type;
         return true;
     },
 
     reuse:function(type){
-        cc.log("star reuse");
-        this.setSpriteFrame("#star"+type+".jpg");
+        //cc.log("star reuse");
+        this.setSpriteFrame("start"+type+".jpg");
+        this.setScaleX(GameConstants.ITEM_SCALE);
+        this.setScaleY(GameConstants.ITEM_SCALE);
         this.type = type;
     },
 
     unuse:function(){
-        cc.log("star unuse");
+        //cc.log("star unuse");
     }
 
 });
 
-Item.create = function(){
+Item.create = function(type){
+    //cc.log("type"+type);
     if(cc.pool.hasObject(Item)){
         return cc.pool.getFromPool(Item,type);
     }
