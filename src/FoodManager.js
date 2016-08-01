@@ -198,8 +198,8 @@ var FoodManager = cc.Class.extend({
         for(var i=this._itemToAnimate.length-1;i>=0;i--){
             item = this._itemToAnimate[i];
             if(item){
-                if(Game.user.lovely>0&&item.type<=GameConstants.NORMAL_STAR_NUMBER){//这里是星星向仙女移动,但是有特殊效果的星星除外
-                    if(this._gameScene._girl._fast==true){
+                if(Game.user.lovely>0&&item.type<=GameConstants.NORMAL_STAR_NUMBER&&item.x>hero.x){//这里是星星向仙女移动,但是有特殊效果的星星除外
+                    if(hero._fast==true){
                         item.x -= (item.x-hero.x)*0.08;
                         item.y -= (item.y-hero.y)*0.08;
                     }
@@ -231,7 +231,7 @@ var FoodManager = cc.Class.extend({
                             Sound.playEatMoney();
                         }
                         else if(item.type==GameConstants.LOVELY_TYPE){
-                            Game.user.lovely = 0.5;
+                            Game.user.lovely = 1;
                             Game.user.score += 1;
                             Sound.playMEat();
                         }
