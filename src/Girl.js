@@ -7,7 +7,6 @@ var Girl = cc.Sprite.extend({
     state:0,
     ctor:function(){
         this._super("#girl.jpg");
-
         /*this._animation = new cc.Animation();
         for(var i=1;i<20;i++){
             this._animation.addSpriteFrame(cc.spriteFrameCache.getSpriteFrame("girl_00"+(i<10?('0'+i):i)+".jpg"));

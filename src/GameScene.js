@@ -4,11 +4,14 @@
 var GameScene = cc.Layer.extend({
     _girl:null,
     _ui:null,
+    _gameOverUI:null,
     _background:null,
     itemBatchLayer:null,
     _touchY:0,
     //_touchX:0,
     _foodManager:null,
+    _obstacleManager:null,
+
 
     ctor:function(){
         this._super();
@@ -33,8 +36,13 @@ var GameScene = cc.Layer.extend({
         this._ui.update();
 
         this._foodManager = new FoodManager(this);
+        this._obstacleManager = new ObstacleManager(this);
 
         this.init();
+
+        this._gameOverUI = new GameOverUI(this);
+        this.addChild(this._gameOverUI,5);
+        this._gameOverUI.setVisible(false);
 
         return true;
     },
@@ -54,7 +62,6 @@ var GameScene = cc.Layer.extend({
         this._girl.setScaleX(0.15);
         this._girl.setScaleY(0.15);
         this._touchY = this._girl.y;
-        //this._touchX = winSize.width/4;
 
         if("touches" in cc.sys.capabilities){
             cc.eventManager.addListener({
@@ -75,6 +82,7 @@ var GameScene = cc.Layer.extend({
         //this._girl.y -= (this._girl.y-this._touchY)*0.1;
         //this._girl.x -= (this._girl.x-this._touchX)*0.1;
         this._foodManager.update(this._girl,elapsed);
+        this._obstacleManager.update(this._girl,elapsed);
 
         var winSize = cc.director.getWinSize();
         switch(Game.gameState){
@@ -108,7 +116,7 @@ var GameScene = cc.Layer.extend({
                     }
                 }
                 else{//如果撞击的话
-                    if(Game.user.Money<=0){//如果没有进入急速状态,这种状态下是不用管障碍物的
+                    if(Game.user.Money<=0){//如果没有进入急速状态,这种状态下是需要管障碍物的
                         if(this._girl.state!=GameConstants.HERO_STATE_HIT){
                             this._girl.state=GameConstants.HERO_STATE_HIT;
                         }
@@ -122,6 +130,14 @@ var GameScene = cc.Layer.extend({
                     }
                     Game.user.hitObstacle--;
                 }
+                if(Game.user.hitObstacle>0){
+                    this.x = parseInt(Math.random()*Game.user.hitObstacle-Game.user.hitObstacle*0.5);
+                    this.y = parseInt(Math.random()*Game.user.hitObstacle-Game.user.hitObstacle*0.5);
+                }
+                else if(this.x!=0){
+                    this.x=0;
+                    this.y=0;
+                }
 
                 if(Game.user.lovely>0){
                     Game.user.lovely -= elapsed;
@@ -130,7 +146,22 @@ var GameScene = cc.Layer.extend({
                 this._background.speed = Game.user.heroSpeed*elapsed;
                 Game.user.distance += (Game.user.heroSpeed*elapsed)*0.1;
                 this._ui.update();
-
+                break;
+            case GameConstants.GAME_STATE_OVER:
+                this._foodManager.removeAll();
+                this._obstacleManager.removeAll();
+                this._girl.setRotation(30);
+                if(this._girl.y>-this._girl.height/2){
+                    Game.user.heroSpeed -= Game.user.heroSpeed*elapsed;
+                    this._girl.y -= winSize.height*elapsed;
+                }
+                else{
+                    Game.user.heroSpeed = 0;
+                    this.unscheduleUpdate();
+                    this._gameOver();
+                }
+                this._background.speed = Game.user.heroSpeed*elapsed;
+                break;
         }
     },
 
@@ -148,6 +179,16 @@ var GameScene = cc.Layer.extend({
             this._girl.setRotation(0);
         }
 
+    },
+
+    endGame:function(){
+        Game.gameState = GameConstants.GAME_STATE_OVER;
+    },
+
+    _gameOver:function(){
+        this._gameOverUI.setVisible(true);
+        this._gameOverUI.init();
+        Sound.playLose();
     }
 
 });

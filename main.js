@@ -14,6 +14,9 @@ cc.game.onStart = function(){
     // The game will be resized when browser size change
     cc.view.resizeWithBrowserSize(true);
 
+    //改变加载时显示的图片
+    cc._loaderImage = "res/replay.jpg";
+
     //load resources
     cc.LoaderScene.preload(g_resources, function () {
         cc.spriteFrameCache.addSpriteFrames(res.Pic_plist,res.Pic_png);

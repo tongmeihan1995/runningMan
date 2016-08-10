@@ -39,17 +39,17 @@ var Sound = {
     },
     playHit:function(){
         if(!Sound.silence){
-            cc.audioEngine.playEffect("res/hit.mp3",true);
+            cc.audioEngine.playEffect("res/hit.mp3",false);
         }
     },
     playHurt:function(){
         if(!Sound.silence){
-            cc.audioEngine.playEffect("res/hit.mp3",true);
+            cc.audioEngine.playEffect("res/hit.mp3",false);
         }
     },
     playLose:function(){
         if(!Sound.silence){
-            cc.audioEngine.playMusic("res/lose.mp3",true);
+            cc.audioEngine.playMusic("res/lose.mp3",false);
         }
     },
     stop:function(){
@@ -70,4 +70,4 @@ var Sound = {
         }
     }
 
-}
+};

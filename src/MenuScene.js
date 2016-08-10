@@ -76,6 +76,7 @@ var MenuScene = cc.Scene.extend({
     _about:function(){
         Sound.playEatMoney();
         cc.director.runScene(new AboutScene());
+
     },
     update:function(){
         /*这里是让整体上下浮动的动画*/

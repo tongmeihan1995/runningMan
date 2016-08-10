@@ -12,12 +12,15 @@ var GameConstants = {
     HERO_LIVES:5,
     HERO_DISTANCE:0,
     HERO_SCORE:0,
-    HERO_MIN_SPEED:300,
-    HERO_MAX_SPEED:600,
+    HERO_MIN_SPEED:400,//小女巫的最低速度
+    HERO_MAX_SPEED:600,//小女巫的最高速度
     GIRL_SCALE:0.1,
-    GAME_AREA_TOP_BOTTOM:120,
+    GAME_AREA_TOP_BOTTOM:160,
     NORMAL_STAR_NUMBER:4,
     MONEY_TYPE:5,
     LOVELY_TYPE:6,
-    ITEM_SCALE:0.3
+    ITEM_SCALE:0.3,//星星缩小的比例
+    OBSTACLE_SCALE:0.8,//障碍物缩小的比例
+    OBSTACLE_GAP:3000,//障碍物出现的距离
+    OBSTACLE_SPEED:650//障碍物的相对于背景的速度
 };

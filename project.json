@@ -25,6 +25,8 @@
         "src/Girl.js",
         "src/GameConstants.js",
         "src/FoodManager.js",
-        "src/Item.js"
+        "src/Item.js",
+        "src/Obstacle.js",
+        "src/ObstacleManager.js"
     ]
 }
