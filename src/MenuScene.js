@@ -17,6 +17,23 @@ var MenuScene = cc.Scene.extend({
         bgWelcome.setScaleX(winSize.width/bgWelcome.width);
         bgWelcome.setScaleY(winSize.height/bgWelcome.height);
         layer.addChild(bgWelcome);
+
+        // var snow = new cc.ParticleSnow();
+        // snow.texture = cc.textureCache.addImage("res/snow.jpg");
+        // layer.addChild(snow);
+        var goldEmitter_0 = new cc.ParticleSystem("res/gold_0.plist");
+        goldEmitter_0.texture = cc.textureCache.addImage("res/snow.jpg");
+        goldEmitter_0.attr({
+            x: winSize.width / 2,
+            y: winSize.height/2,
+            anchorX: 0.5,
+            anchorY: 0
+        });
+        goldEmitter_0.setAutoRemoveOnFinish(true);
+        goldEmitter_0.setPositionType(cc.ParticleSystem.TYPE_GROUPED);
+        layer.addChild(goldEmitter_0);
+
+
         var title = new cc.Sprite('#welcome.jpg');
         title.x = 800;
         title.y = 555;
@@ -59,15 +76,8 @@ var MenuScene = cc.Scene.extend({
         menu.x = menu.y = 0;
         this.scheduleUpdate();
 
-        // var fnt = "res/myFont.fnt";
-        // var scoreLabel = new cc.LabelBMFont("S C O R E",fnt);
-        // this.addChild(scoreLabel);
-        // scoreLabel.x=915;
-        // scoreLabel.y=winSize.height-25;
-        // this._scoreText = new cc.LabelBMFont("0",fnt);
-        // this.addChild(this._scoreText);
-        // this._scoreText.x=915;
-        // this._scoreText.y=winSize.height-60;
+
+
     },
     _play:function(){
         Sound.playMEat();
